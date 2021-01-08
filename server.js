@@ -7,9 +7,11 @@ const express = require("express");
 const app = express();
 const parser = require('body-parser');
 const path = require('path');
+const csvToJson = require('csvtojson');
 
 // our default array of dreams
-let fileExt = ''; 
+let fileExt = '';
+let sampleCsvUrl = 'http://winterolympicsmedals.com/medals.csv';
 
 app.use(parser.json());
 // make all the files in 'public' available
@@ -38,11 +40,16 @@ app.post("/csvtojson", (request, response) => {
                     // return response.json({message: body['csv']['select_fields']});
                     return response.json({message: 'select_fields parameter not passed'});
                   } else {
-                      fileExt = path.extname(body['csv']['url']);
+                      // fileExt = path.extname(body['csv']['url']);
+                      fileExt = path.extname(sampleCsvUrl);
                       if (fileExt !== '.csv') {
                         return response.json({message: 'URL is invalid (.csv extension not found)'});
                     }
-                    return response.json({message: { url: body['csv']['url'], select_fields: body['csv']['select_fields'], fileExt }});
+                    
+                    csvTojson()
+                    .fromStream
+                    // return response.json({message: { url: body['csv']['url'], select_fields: body['csv']['select_fields'], fileExt }});
+                    return response.json({message: { url: sampleCsvUrl, select_fields: body['csv']['select_fields'], fileExt }});
                   }
                 } else {
                     return response.json({message: 'url is not supplied'});
