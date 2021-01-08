@@ -30,7 +30,7 @@ app.get("/dreams", (request, response) => {
 });
 
 // POST route for accessing CSV url object
-app.post("/csvtojson", (request, response) => {
+app.post("/csvtojson", async (request, response) => {
   // express helps us take JS objects and send them as JSON
   const { url, body } = request;
           if (body) {
@@ -46,10 +46,14 @@ app.post("/csvtojson", (request, response) => {
                         return response.json({message: 'URL is invalid (.csv extension not found)'});
                     }
                     
-                    csvTojson()
-                    .fromStream
+                    const csvData = await csvToJson()
+                                          .fromStream(fetch(sampleCsvUrl))
+                                          .subscribe(data => {
+                                            console.log(data);
+                                            return data;
+                                          });
                     // return response.json({message: { url: body['csv']['url'], select_fields: body['csv']['select_fields'], fileExt }});
-                    return response.json({message: { url: sampleCsvUrl, select_fields: body['csv']['select_fields'], fileExt }});
+                    return response.json({message: { url: sampleCsvUrl, select_fields: body['csv']['select_fields'], fileExt, data: csvData }});
                   }
                 } else {
                     return response.json({message: 'url is not supplied'});
