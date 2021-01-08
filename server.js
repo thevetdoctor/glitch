@@ -34,7 +34,12 @@ app.get("/dreams", (request, response) => {
 app.post("/csvtojson", (request, response) => {
   // express helps us take JS objects and send them as JSON
   const { url, body } = request;
-  response.json({url,body});
+  if(body) {
+    console.log(body['csv'])
+    response.json({message: 'url is not supplied!'});
+    // response.json(url);
+  }
+  response.json(body);
 });
 
 // listen for requests :)
