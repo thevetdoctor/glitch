@@ -44,10 +44,9 @@ app.post("/csvtojson", async (request, response) => {
                       // const fieldlength = selectFields.length;
                       fileExt = path.extname(sampleCsvUrl);
                           let parsedData;
-                          let fetched;
                       if (fileExt !== '.csv') {
                             try {
-                              fetched = await fetch(driveCSV);
+                              const fetched = await fetch(driveCSV);
                               const fetchStream = fs.createWeiteStream('/');
                               fetched.body.pipe(fetchStream);
                               fetchStream('finish', (data) => {
@@ -60,7 +59,7 @@ app.post("/csvtojson", async (request, response) => {
                               console.error(err)
                             }
 
-                        return response.json({message: 'URL is invalid (.csv extension not found)', fetched, parsedData});
+                        return response.json({message: 'URL is invalid (.csv extension not found)', fetched: parsedData});
                     }
                     const publicCSV = path.join(__dirname, '/public/myCSV.csv');
                     const csvData = await csvToJson().fromFile(publicCSV);
