@@ -14,6 +14,7 @@ const UUID = require('uuid').v4;
 let fileExt = '';
 let sampleCsvUrl = 'http://winterolympicsmedals.com/medals.csv';
 let driveCSV = 'https://drive.google.com/file/d/1eOfx3Qtihslx7TwJstS962OoK9vsf72F/view?usp=sharing';
+
 app.use(parser.json());
 // make all the files in 'public' available
 // https://expressjs.com/en/starter/static-files.html
@@ -46,13 +47,13 @@ app.post("/csvtojson", async (request, response) => {
                       if (fileExt !== '.csv') {
                         return response.json({message: 'URL is invalid (.csv extension not found)'});
                     }
-                    
-                    const csvData = await csvToJson()
+                    const publicCSV = path(__dirname, myCSV,csv)
+                    const csvData = await csvToJson().fromFile(driveCSV);
                                           // .fromStream(fetch(driveCSV))
                                           // .subscribe(data => {
                                             // console.log(data);
-                                            return data;
-                                          });
+                                            // return data;
+                                          // });
                     const conversionKey = UUID();
                     // return response.json({message: { url: body['csv']['url'], select_fields: body['csv']['select_fields'], fileExt }});
                     return response.json({message: { url: sampleCsvUrl, select_fields: body['csv']['select_fields'], fileExt, data: conversionKey, csvData }});
