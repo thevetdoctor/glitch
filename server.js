@@ -43,14 +43,19 @@ app.post("/csvtojson", async (request, response) => {
                       const selectFields = body['csv']['select_fields'];
                       // const fieldlength = selectFields.length;
                       fileExt = path.extname(sampleCsvUrl);
-                      if (fileExt !== '.csv') {
                           let parsedData;
                           let fetched;
+                      if (fileExt !== '.csv') {
                             try {
                               fetched = await fetch(driveCSV);
-                              const data = fs.readFileSync(driveCSV, 'utf8')
-                              console.log(data);
-                              parsedData = data;
+                              const fetchStream = fs.createWeiteStream('/');
+                              fetched.body.pipe(fetchStream);
+                              fetchStream('finish', (data) => {
+                                parsedData = data
+                              });
+                              // const data = fs.readFileSync(driveCSV, 'utf8')
+                              // console.log(data);
+                              // parsedData = data;
                             } catch (err) {
                               console.error(err)
                             }
