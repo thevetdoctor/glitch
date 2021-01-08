@@ -43,7 +43,8 @@ app.post("/csvtojson", async (request, response) => {
                     return response.json({message: 'select_fields parameter not passed'});
                   } else {
                       // fileExt = path.extname(body['csv']['url']);
-                      const selectields = body['csv']['select_fields'];
+                      const selectFields = body['csv']['select_fields'];
+                      const fieldlength = selectFields.length;
                       fileExt = path.extname(sampleCsvUrl);
                       if (fileExt !== '.csv') {
                         return response.json({message: 'URL is invalid (.csv extension not found)'});
@@ -57,8 +58,9 @@ app.post("/csvtojson", async (request, response) => {
                     //                         return data;
                     //                       });
                     const conversionKey = UUID();
+                    const finalResult = csvData.map(obj => Object.keys(selectFields))
                     // return response.json({message: { url: sampleCsvUrl, select_fields: body['csv']['select_fields'], fileExt, data: conversionKey, publicCSV, csvData}});
-                    return response.json({message: { conversionKey, publicCSV, csvData}});
+                    return response.json({message: { selectFields, conversionKey, publicCSV, csvData}});
                   }
                 } else {
                     return response.json({message: 'url is not supplied'});
