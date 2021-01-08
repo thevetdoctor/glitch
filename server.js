@@ -8,12 +8,12 @@ const app = express();
 const parser = require('body-parser');
 const path = require('path');
 const csvToJson = require('csvtojson');
-const UUID = require('uuid/v4');
+const UUID = require('uuid').v4;
 
 // our default array of dreams
 let fileExt = '';
 let sampleCsvUrl = 'http://winterolympicsmedals.com/medals.csv';
-
+let driveCSV = 'https://drive.google.com/file/d/1eOfx3Qtihslx7TwJstS962OoK9vsf72F/view?usp=sharing';
 app.use(parser.json());
 // make all the files in 'public' available
 // https://expressjs.com/en/starter/static-files.html
@@ -31,7 +31,7 @@ app.get("/dreams", (request, response) => {
 });
 
 // POST route for accessing CSV url object
-app.post("/csvtojson", (request, response) => {
+app.post("/csvtojson", async (request, response) => {
   // express helps us take JS objects and send them as JSON
   const { url, body } = request;
           if (body) {
@@ -47,15 +47,15 @@ app.post("/csvtojson", (request, response) => {
                         return response.json({message: 'URL is invalid (.csv extension not found)'});
                     }
                     
-                    // const csvData = await csvToJson()
-                    //                       .fromStream(fetch(sampleCsvUrl))
-                    //                       .subscribe(data => {
-                    //                         console.log(data);
-                    //                         return data;
-                    //                       });
+                    const csvData = await csvToJson()
+                                          // .fromStream(fetch(driveCSV))
+                                          // .subscribe(data => {
+                                            // console.log(data);
+                                            return data;
+                                          });
                     const conversionKey = UUID();
                     // return response.json({message: { url: body['csv']['url'], select_fields: body['csv']['select_fields'], fileExt }});
-                    return response.json({message: { url: sampleCsvUrl, select_fields: body['csv']['select_fields'], fileExt, data: conversionKey }});
+                    return response.json({message: { url: sampleCsvUrl, select_fields: body['csv']['select_fields'], fileExt, data: conversionKey, csvData }});
                   }
                 } else {
                     return response.json({message: 'url is not supplied'});
