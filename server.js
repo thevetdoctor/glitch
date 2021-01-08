@@ -38,11 +38,7 @@ app.post("/csvtojson", async (request, response) => {
           if (body) {
             if (Object.keys(body).indexOf('csv') >= 0) {
                 if (Object.keys(body['csv']).indexOf('url') >= 0) {
-                  if (Object.keys(body['csv']).indexOf('select_fields') < 0) {
-                    // return response.json({message: body['csv']['select_fields']});
-                    return response.json({message: 'select_fields parameter not passed'});
-                  } else {
-                      // fileExt = path.extname(body['csv']['url']);
+// fileExt = path.extname(body['csv']['url']);
                       const selectFields = body['csv']['select_fields'];
                       // const fieldlength = selectFields.length;
                       fileExt = path.extname(sampleCsvUrl);
@@ -58,18 +54,22 @@ app.post("/csvtojson", async (request, response) => {
                     //                         return data;
                     //                       });
                     const conversionKey = UUID();
-                    const finalResult = csvData.map(obj => {
+                    let finalJson;
+                     if (Object.keys(body['csv']).indexOf('select_fields') >= 0) {
+                      const finalJson = csvData.map(obj => {
                                                           let newObj= {};
-                                                          for(let i = 0; i < selectFields.length - 2; i++) {
+                                                          for(let i = 0; i < selectFields.length; i++) {
                                                           // Object.keys(obj) === Object.values(selectFields)
                                                             newObj[selectFields[i]] = obj[selectFields[i]];
                                                            }
                                                           return newObj;
                                                       });
+                    return response.json({message: 'select_fields parameter not passed'});
+                    } 
                                                            
                     // return response.json({message: { url: sampleCsvUrl, select_fields: body['csv']['select_fields'], fileExt, data: conversionKey, publicCSV, csvData}});
-                    return response.json({message: { selectFields, conversionKey, publicCSV, csvData, finalResult}});
-                  }
+                    return response.json({message: { selectFields, conversionKey, publicCSV, csvData, finalJson}});                  
+                 
                 } else {
                     return response.json({message: 'url is not supplied'});
                 }
