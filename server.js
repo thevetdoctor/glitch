@@ -58,9 +58,13 @@ app.post("/csvtojson", async (request, response) => {
                     //                         return data;
                     //                       });
                     const conversionKey = UUID();
-                    const finalResult = csvData.map(obj => Object.keys(selectFields))
+                    const finalResult = csvData.map(obj => {Object.values(selectFields))
+                                                    for(const { key, value } of obj) {
+                                                      return {}
+                                                    }
+                                                           }
                     // return response.json({message: { url: sampleCsvUrl, select_fields: body['csv']['select_fields'], fileExt, data: conversionKey, publicCSV, csvData}});
-                    return response.json({message: { selectFields, conversionKey, publicCSV, csvData}});
+                    return response.json({message: { selectFields, conversionKey, publicCSV, csvData, finalResult}});
                   }
                 } else {
                     return response.json({message: 'url is not supplied'});
