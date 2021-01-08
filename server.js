@@ -64,11 +64,13 @@ app.post("/csvtojson", async (request, response) => {
                                                            }
                                                           return newObj;
                                                       });
-                    return response.json({message: 'select_fields parameter not passed'});
-                    } 
+                    // return response.json({message: 'select_fields parameter not passed'});
+                    } else {
+                      finalJson = csvData;
+                    }
                                                            
                     // return response.json({message: { url: sampleCsvUrl, select_fields: body['csv']['select_fields'], fileExt, data: conversionKey, publicCSV, csvData}});
-                    return response.json({message: { selectFields, conversionKey, publicCSV, csvData, finalJson}});                  
+                    return response.json({ conversion_key: conversionKey, json: finalJson });                  
                  
                 } else {
                     return response.json({message: 'url is not supplied'});
