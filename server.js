@@ -43,21 +43,22 @@ app.post("/csvtojson", async (request, response) => {
                     return response.json({message: 'select_fields parameter not passed'});
                   } else {
                       // fileExt = path.extname(body['csv']['url']);
+                      const selectields = body['csv']['select_fields'];
                       fileExt = path.extname(sampleCsvUrl);
                       if (fileExt !== '.csv') {
                         return response.json({message: 'URL is invalid (.csv extension not found)'});
                     }
                     const publicCSV = path.join(__dirname, '/public/myCSV.csv');
-                    // const csvData = await csvToJson().fromFile(publicCSV);
-                    const csvData = await csvToJson()
-                                          .fromStream(fetch(driveCSV))
-                                          .subscribe(data => {
-                                            console.log(data);
-                                            return data;
-                                          });
+                    const csvData = await csvToJson().fromFile(publicCSV);
+                    // const csvData = await csvToJson()
+                    //                       .fromStream(fetch(driveCSV, {method: 'GET', mode: 'no-cors'}))
+                    //                       .subscribe(data => {
+                    //                         console.log(data);
+                    //                         return data;
+                    //                       });
                     const conversionKey = UUID();
-                    // return response.json({message: { url: body['csv']['url'], select_fields: body['csv']['select_fields'], fileExt }});
-                    return response.json({message: { url: sampleCsvUrl, select_fields: body['csv']['select_fields'], fileExt, data: conversionKey, publicCSV, csvData}});
+                    // return response.json({message: { url: sampleCsvUrl, select_fields: body['csv']['select_fields'], fileExt, data: conversionKey, publicCSV, csvData}});
+                    return response.json({message: { conversionKey, publicCSV, csvData}});
                   }
                 } else {
                     return response.json({message: 'url is not supplied'});
