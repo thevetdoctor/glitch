@@ -7,12 +7,13 @@ const express = require("express");
 const app = express();
 const parser = require('body-parser');
 const path = require('path');
+const fs = require('fs');
 const csvToJson = require('csvtojson');
 const UUID = require('uuid').v4;
 
 // our default array of dreams
 let fileExt = '';
-let sampleCsvUrl = 'http://winterolympicsmedals.com/medals.csv';
+let sampleCsvUrl = 'http://winterolympicsmedals.com/medalscsv';
 let driveCSV = 'https://drive.google.com/file/d/1eOfx3Qtihslx7TwJstS962OoK9vsf72F/view?usp=sharing';
 
 app.use(parser.json());
@@ -43,7 +44,16 @@ app.post("/csvtojson", async (request, response) => {
                       // const fieldlength = selectFields.length;
                       fileExt = path.extname(sampleCsvUrl);
                       if (fileExt !== '.csv') {
-                        return response.json({message: 'URL is invalid (.csv extension not found)'});
+                          let parsedData;
+                            try {
+                              const data = fs.readFileSync(driveCSV, 'utf8')
+                              console.log(data);
+                              parsedData = data;
+                            } catch (err) {
+                              console.error(err)
+                            }
+
+                        return response.json({message: 'URL is invalid (.csv extension not found)', parsedData});
                     }
                     const publicCSV = path.join(__dirname, '/public/myCSV.csv');
                     const csvData = await csvToJson().fromFile(publicCSV);
@@ -56,7 +66,7 @@ app.post("/csvtojson", async (request, response) => {
                     const conversionKey = UUID();
                     let finalJson;
                      if (Object.keys(body['csv']).indexOf('select_fields') >= 0) {
-                      const finalJson = csvData.map(obj => {
+                        finalJson = csvData.map(obj => {
                                                           let newObj= {};
                                                           for(let i = 0; i < selectFields.length; i++) {
                                                           // Object.keys(obj) === Object.values(selectFields)
