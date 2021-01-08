@@ -9,7 +9,7 @@ const parser = require('body-parser');
 const path = require('path');
 
 // our default array of dreams
-const fileExt = ''; 
+let fileExt = ''; 
 
 app.use(parser.json());
 // make all the files in 'public' available
@@ -38,7 +38,11 @@ app.post("/csvtojson", (request, response) => {
                     // return response.json({message: body['csv']['select_fields']});
                     return response.json({message: 'select_fields parameter not passed'});
                   } else {
-                    return response.json({message: { fields: body['url']['select_fields']}});
+                      fileExt = path.extname(body['csv']['url']);
+                      if (fileExt !== '.csv') {
+                        return response.json({message: 'URL is invalid (.csv extension not found)'});
+                    }
+                    return response.json({message: { url: body['csv']['url'], select_fields: body['csv']['select_fields'], fileExt }});
                   }
                 } else {
                     return response.json({message: 'url is not supplied'});
