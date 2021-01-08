@@ -44,7 +44,7 @@ app.post("/csvtojson", async (request, response) => {
                   } else {
                       // fileExt = path.extname(body['csv']['url']);
                       const selectFields = body['csv']['select_fields'];
-                      const fieldlength = selectFields.length;
+                      // const fieldlength = selectFields.length;
                       fileExt = path.extname(sampleCsvUrl);
                       if (fileExt !== '.csv') {
                         return response.json({message: 'URL is invalid (.csv extension not found)'});
@@ -58,12 +58,14 @@ app.post("/csvtojson", async (request, response) => {
                     //                         return data;
                     //                       });
                     const conversionKey = UUID();
-                    const finalResult = csvData.filter(obj => {
-                                                        for(let i = 0; i < selectFields; i++) {
-                                                       
-                                                       } 
-                                                        Object.keys(obj) === Object.values(selectFields)
-                                                      };
+                    const finalResult = csvData.map(obj => {
+                                                          let newObj= {};
+                                                          for(let i = 0; i < selectFields.length - 2; i++) {
+                                                          // Object.keys(obj) === Object.values(selectFields)
+                                                            newObj[selectFields[i]] = obj[selectFields[i]];
+                                                           }
+                                                          return newObj;
+                                                      });
                                                            
                     // return response.json({message: { url: sampleCsvUrl, select_fields: body['csv']['select_fields'], fileExt, data: conversionKey, publicCSV, csvData}});
                     return response.json({message: { selectFields, conversionKey, publicCSV, csvData, finalResult}});
