@@ -34,21 +34,22 @@ app.get("/dreams", (request, response) => {
 app.post("/csvtojson", (request, response) => {
   // express helps us take JS objects and send them as JSON
   const { url, body } = request;
-  if (body) {
-    if (!Object.keys(body).indexOf('csv')) {
-        return response.json({message: 'csv key not passed'});
-      if (!Object.keys(body['csv']).indexOf('selected_fields')) {
-        return response.json({message: 'selected_fields parameter not passed'});
-      }
-      if (!Object.keys(body['csv']).indexOf('url')) {
-        return response.json({message: 'url is not supplied'});
-      } else {
-        return response.json({message: body['csv']['url']});
-      }
+     if (body) {
+        if (Object.keys(body).indexOf('csv')) {
+            if (!Object.keys(body['csv']).indexOf('selected_fields')) {
+                return response.json({message: 'selected_fields parameter not passed'});
+            }
+            if (Object.keys(body['csv']).indexOf('url')) {
+                return response.json({message: body['csv']['url']});
+            } else {
+                return response.json({message: 'url is not supplied'});
+            }
+        } else {
+            return response.json({message: 'csv key not passed'});
+        }
+    } else {
+        return response.json({message: 'Required fields are not found'});
     }
-    return response.json({message: 'Required fields are not found'});
-  }
-    response.json({message: 'url is not supplied!'});
 });
 
 // listen for requests :)
