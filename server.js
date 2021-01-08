@@ -47,16 +47,17 @@ app.post("/csvtojson", async (request, response) => {
                       if (fileExt !== '.csv') {
                         return response.json({message: 'URL is invalid (.csv extension not found)'});
                     }
-                    const publicCSV = path(__dirname, myCSV,csv)
-                    const csvData = await csvToJson().fromFile(driveCSV);
-                                          // .fromStream(fetch(driveCSV))
-                                          // .subscribe(data => {
-                                            // console.log(data);
-                                            // return data;
-                                          // });
+                    const publicCSV = path.join(__dirname, '/public/myCSV.csv');
+                    // const csvData = await csvToJson().fromFile(publicCSV);
+                    const csvData = await csvToJson()
+                                          .fromStream(fetch(driveCSV))
+                                          .subscribe(data => {
+                                            console.log(data);
+                                            return data;
+                                          });
                     const conversionKey = UUID();
                     // return response.json({message: { url: body['csv']['url'], select_fields: body['csv']['select_fields'], fileExt }});
-                    return response.json({message: { url: sampleCsvUrl, select_fields: body['csv']['select_fields'], fileExt, data: conversionKey, csvData }});
+                    return response.json({message: { url: sampleCsvUrl, select_fields: body['csv']['select_fields'], fileExt, data: conversionKey, publicCSV, csvData}});
                   }
                 } else {
                     return response.json({message: 'url is not supplied'});
