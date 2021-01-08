@@ -40,12 +40,13 @@ app.post("/csvtojson", (request, response) => {
       if (Object.keys(body['csv']).indexOf('selected_fields')) {
         return response.json({message: 'selected_fields parameter not passed'});
       }
+      if (Object.keys(body['csv']).indexOf('url')) {
+        return response.json({message: body['csv']['url']});
+      } else {
+        return response.json({message: 'url is not supplied'});
+      }
     }
-  }
-  if(body && body['csv']['url']) {
-    console.log(body['csv'])
-    response.json({message: body['csv']['selected_fields']});
-    // response.json(body);
+    return response.json({message: ''});
   }
     response.json({message: 'url is not supplied!'});
 });
