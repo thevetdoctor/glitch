@@ -6,13 +6,10 @@
 const express = require("express");
 const app = express();
 const parser = require('body-parser');
+const path = require('path');
 
 // our default array of dreams
-const dreams = [
-  "Find and count some sheep",
-  "Climb a really tall mountain",
-  "Wash the dishes"
-];
+const fileExt = ''; 
 
 app.use(parser.json());
 // make all the files in 'public' available
@@ -37,9 +34,11 @@ app.post("/csvtojson", (request, response) => {
           if (body) {
             if (Object.keys(body).indexOf('csv') >= 0) {
                 if (Object.keys(body['csv']).indexOf('url') >= 0) {
-                  if (Object.keys(body['csv']).indexOf('select_fields') >= 0) {
-                    return response.json({message: body['csv']['select_fields']});
-                    // return response.json({message: 'select_fields parameter not passed'});
+                  if (Object.keys(body['csv']).indexOf('select_fields') < 0) {
+                    // return response.json({message: body['csv']['select_fields']});
+                    return response.json({message: 'select_fields parameter not passed'});
+                  } else {
+                    return response.json({message: { fields: body['url']['select_fields']}});
                   }
                 } else {
                     return response.json({message: 'url is not supplied'});
