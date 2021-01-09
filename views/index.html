@@ -28,14 +28,18 @@
 
       <form>
         <label>
-          Paste in your CSV url link
-          <input name="dream" type="text" maxlength="100" required placeholder="Paste in the URL link!">
+          Paste in CSV url link
+          <input name="csv-url" type="text" maxlength="100" required placeholder="Paste in URL link!">
         </label>
-        <button type="submit" id="submit-dream">Convert</button>
+        <label>
+          Enter select fields
+          <input name="fields" type="text" maxlength="100" required placeholder="Enter select fields!">
+        </label>    
+        <button type="submit" id="submitForm">Convert</button>
       </form>
 
 <!--       <section class="dreams"> -->
-        <ul id="dreams">
+        <ul id="payload">
 <!--           <em>loading dreams&hellip;</em> -->
         </ul>
 <!--       </section> -->

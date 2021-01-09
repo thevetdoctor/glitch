@@ -15,27 +15,24 @@ function displayObject(obj) {
 }
 
 // fetch the initial list of dreams
-fetch("/csvtojson", { method: 'POST' })
+const fetchCsv = async () => {
+await fetch("/csvtojson", { method: 'POST' })
   .then(response => response.json()) // parse the JSON from the server
   .then(json => {
-    // remove the loading text
-    jsonList.firstElementChild.remove();
-  
-    // iterate through every object and add it to our page
+
+  // iterate through every object and add it to our page
     json.forEach(displayObject);
-  
-    // listen for the form to be submitted and add a new object when it is
+  });
+}
+
+// listen for the form to be submitted and add a new object when it is
     jsonForm.addEventListener("submit", event => {
       // stop our form submission from refreshing the page
       event.preventDefault();
-
-      // get object string value and add it to the list
-      let newDream = jsonForm.elements.dream.value;
-      dreams.push(newDream);
-      appendNewDream(newDream);
-
+      console.log(event.target);
+      // fetch json data
+      fetchCsv();
+      
       // reset form
       jsonForm.reset();
-      jsonForm.elements.dream.focus();
     });
-  });
