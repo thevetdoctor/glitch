@@ -19,10 +19,10 @@ const fetchCsv = async (url, fields) => {
   const body = JSON.stringify({
                 csv: {
                   url, 
-                  'select_fields': fields 
+                  'select_fields': fields.length ? fields : null 
                 }
               });
-  console.log(body);
+  console.log(body, fields.length);
 await fetch("/csvtojson", 
             { method: 'POST', 
               body,
@@ -46,11 +46,12 @@ await fetch("/csvtojson",
       
       // declare form values
       let url = jsonForm.elements['csv-url'].value;
-      let fields = jsonForm.elements['fields'].value;
-      console.log(url, fields.split(','));
+      let fieldsValues = jsonForm.elements['fields'].value;
+      let fields = !fieldsValues ? fieldsValues.split(',') : null;
+      console.log(url, fieldsValues ? 'd' : 's', fields);
       
       // fetch json data
-      fetchCsv(url, fields.split(','));
+      fetchCsv(url, fields);
       
       // reset form
       jsonForm.reset();
