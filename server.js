@@ -67,14 +67,6 @@ app.post("/csvtojson", async (request, response) => {
                             //     console.log('CSV file successfully processed');
                             //   });
 
-                            // const csvData = await csvToJson()
-                            //                       // .fromStream(fetch(driveCSV, {method: 'GET', mode: 'no-cors'}))
-                            //                       .fromStream(request.get(driveCSV))
-                            //                       .subscribe(data => {
-                            //                         console.log(data);
-                            //                         return data;
-                            //                       });
-                  
                             const publicCSV = path.join(__dirname, '/public/myCSV.csv');
                             const csvData = await csvToJson().fromFile(publicCSV);
                             const conversionKey = UUID();
