@@ -27,8 +27,7 @@ const fetchCsv = async (url, fields) => {
         } else {
           body = JSON.stringify({
                 csv: {
-                  url, 
-                  'select_fields': fields 
+                  url
                 }
               });
         }
@@ -54,6 +53,10 @@ await fetch("/csvtojson",
       // stop our form submission from refreshing the page
       event.preventDefault();
       
+      // remove old values from DOM
+      if(jsonList.childNode()) {
+      jsonList.removeChild();
+      }      
       // declare form values
       let url = jsonForm.elements['csv-url'].value;
       let fieldsValues = jsonForm.elements['fields'].value;
