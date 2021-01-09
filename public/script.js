@@ -9,8 +9,9 @@ const jsonForm = document.querySelector("form");
 
 // a helper function that creates a list item for a given dream
 function displayObject(obj) {
+  console.log(typeof obj);
   const newListItem = document.createElement("li");
-  newListItem.innerText = obj.toString();
+  newListItem.innerText = JSON.stringify(obj);
   jsonList.appendChild(newListItem);
 }
 
@@ -19,9 +20,10 @@ const fetchCsv = async () => {
 await fetch("/csvtojson", { method: 'POST' })
   .then(response => response.json()) // parse the JSON from the server
   .then(json => {
-
+  let sampleJson = [{'url' : 'json'}, {'url': 'json'}];
   // iterate through every object and add it to our page
-    json.forEach(displayObject);
+    // json.forEach(displayObject);
+    sampleJson.forEach(displayObject);
   });
 }
 
