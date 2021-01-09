@@ -42,7 +42,6 @@ app.post("/csvtojson", async (request, response) => {
                       fileExt = path.extname(body['csv']['url']);
                       if (fileExt !== '.csv') {
                        try {
-                        // const fetchStream = fs.createWriteStream();
                         const fetchStream = fs.createWriteStream(path.join(__dirname, '/public/csvFile.csv'));
                         const fetched = await fetch(driveCSV);
                         console.log(fetched);
@@ -76,6 +75,8 @@ app.post("/csvtojson", async (request, response) => {
                             //                         return data;
                             //                       });
                   
+                            const publicCSV = path.join(__dirname, '/public/myCSV.csv');
+                            const csvData = await csvToJson().fromFile(publicCSV);
                             const conversionKey = UUID();
                             let finalJson;
                              if (Object.keys(body['csv']).indexOf('select_fields') >= 0) {
@@ -88,14 +89,10 @@ app.post("/csvtojson", async (request, response) => {
                                                                    }
                                                                   return newObj;
                                                               });
-                            // return response.json({message: 'select_fields parameter not passed'});
                             } else {
                               finalJson = csvData;
                             }
-
-                            // return response.json({message: { url: sampleCsvUrl, select_fields: body['csv']['select_fields'], fileExt, data: conversionKey, publicCSV, csvData}});
                             return response.json({ conversion_key: conversionKey, json: finalJson });                   
-
                 } else {
                     return response.json({message: 'url is not supplied'});
                 }
