@@ -79,9 +79,9 @@ app.post("/csvtojson", async (request, response) => {
         let finalJson;
         if (Object.keys(body["csv"]).indexOf("select_fields") >= 0) {
           const selectFields = body["csv"]["select_fields"];
-          if (selectFields.filter(x => Object.keys(csvData).indexOf(x))) {
-          if (selectFields.filter(x => Object.keys(csvData).indexOf(x))) {
-            
+          const filterFields = selectFields.filter(x => Object.keys(csvData).indexOf(x));
+          if (filterFields.length) {
+            finalJson = [{message: 'Field not found'}];
           } else {
             finalJson = csvData.map(obj => {
               let newObj = {};
