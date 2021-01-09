@@ -1,41 +1,41 @@
 // client-side js, loaded by index.html
 // run by the browser each time the page is loaded
 
-console.log("hello world :o");
+console.log("Convert CSV files with ease!");
 
 // define variables that reference elements on our page
-const dreamsList = document.getElementById("dreams");
-const dreamsForm = document.querySelector("form");
+const jsonList = document.getElementById("payload");
+const jsonForm = document.querySelector("form");
 
 // a helper function that creates a list item for a given dream
-function appendNewDream(dream) {
+function displayObject(obj) {
   const newListItem = document.createElement("li");
-  newListItem.innerText = dream;
-  dreamsList.appendChild(newListItem);
+  newListItem.innerText = obj.toString();
+  jsonList.appendChild(newListItem);
 }
 
 // fetch the initial list of dreams
-fetch("/dreams")
+fetch("/csvtojson", { method: 'POST' })
   .then(response => response.json()) // parse the JSON from the server
-  .then(dreams => {
+  .then(json => {
     // remove the loading text
-    dreamsList.firstElementChild.remove();
+    jsonList.firstElementChild.remove();
   
-    // iterate through every dream and add it to our page
-    dreams.forEach(appendNewDream);
+    // iterate through every object and add it to our page
+    json.forEach(displayObject);
   
-    // listen for the form to be submitted and add a new dream when it is
-    dreamsForm.addEventListener("submit", event => {
+    // listen for the form to be submitted and add a new object when it is
+    jsonForm.addEventListener("submit", event => {
       // stop our form submission from refreshing the page
       event.preventDefault();
 
-      // get dream value and add it to the list
-      let newDream = dreamsForm.elements.dream.value;
+      // get object string value and add it to the list
+      let newDream = jsonForm.elements.dream.value;
       dreams.push(newDream);
       appendNewDream(newDream);
 
       // reset form
-      dreamsForm.reset();
-      dreamsForm.elements.dream.focus();
+      jsonForm.reset();
+      jsonForm.elements.dream.focus();
     });
   });
