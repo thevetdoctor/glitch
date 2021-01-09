@@ -16,13 +16,23 @@ function displayObject(obj) {
 
 // fetch the initial list of dreams
 const fetchCsv = async (url, fields) => {
-  const body = JSON.stringify({
+  let body;
+        if (fields) {
+          body = JSON.stringify({
                 csv: {
                   url, 
-                  'select_fields': fields.length ? fields : null 
+                  'select_fields': fields 
                 }
               });
-  console.log(body, fields.length);
+        } else {
+          body = JSON.stringify({
+                csv: {
+                  url, 
+                  'select_fields': fields 
+                }
+              });
+        }
+  console.log(body, fields);
 await fetch("/csvtojson", 
             { method: 'POST', 
               body,
@@ -47,7 +57,7 @@ await fetch("/csvtojson",
       // declare form values
       let url = jsonForm.elements['csv-url'].value;
       let fieldsValues = jsonForm.elements['fields'].value;
-      let fields = !fieldsValues ? fieldsValues.split(',') : null;
+      let fields = fieldsValues ? fieldsValues.split(',') : null;
       console.log(url, fieldsValues ? 'd' : 's', fields);
       
       // fetch json data
