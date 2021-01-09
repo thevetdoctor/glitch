@@ -16,13 +16,22 @@ function displayObject(obj) {
 }
 
 // fetch the initial list of dreams
-const fetchCsv = async () => {
-await fetch("/csvtojson", { method: 'POST' })
+const fetchCsv = async (url, fields) => {
+await fetch("/csvtojson", 
+            { method: 'POST', 
+              body: JSON.stringify({
+                'csv': {
+                  'url': url, 
+                  'select_fields': fields 
+                }
+              })
+            })
   .then(response => response.json()) // parse the JSON from the server
   .then(json => {
   let sampleJson = [{'url' : 'json'}, {'url': 'json'}];
   // iterate through every object and add it to our page
     // json.forEach(displayObject);
+  console.log9json
     sampleJson.forEach(displayObject);
   });
 }
@@ -31,7 +40,9 @@ await fetch("/csvtojson", { method: 'POST' })
     jsonForm.addEventListener("submit", event => {
       // stop our form submission from refreshing the page
       event.preventDefault();
-      console.log(event.target);
+      let url = jsonForm.elements['csv-url'].value;
+      let fields = jsonForm.elements['fields'].value;
+      console.log(url, fields);
       // fetch json data
       fetchCsv();
       
