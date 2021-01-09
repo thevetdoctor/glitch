@@ -9,7 +9,6 @@ const jsonForm = document.querySelector("form");
 
 // a helper function that creates a list item for a given dream
 function displayObject(obj) {
-  console.log(typeof obj);
   const newListItem = document.createElement("li");
   newListItem.innerText = JSON.stringify(obj);
   jsonList.appendChild(newListItem);
@@ -17,22 +16,27 @@ function displayObject(obj) {
 
 // fetch the initial list of dreams
 const fetchCsv = async (url, fields) => {
-await fetch("/csvtojson", 
-            { method: 'POST', 
-              body: JSON.stringify({
-                'csv': {
-                  'url': url, 
+  const body = JSON.stringify({
+                csv: {
+                  url, 
                   'select_fields': fields 
                 }
-              })
+              });
+  console.log(body);
+await fetch("/csvtojson", 
+            { method: 'POST', 
+              body,
+             headers: {
+               'Content-Type': 'application/json'
+             }
             })
   .then(response => response.json()) // parse the JSON from the server
   .then(json => {
-  let sampleJson = [{'url' : 'json'}, {'url': 'json'}];
+  // let sampleJson = [{'url' : 'json'}, {'url': 'json'}];
   // iterate through every object and add it to our page
     // json.forEach(displayObject);
-  console.log9json
-    sampleJson.forEach(displayObject);
+  console.log(json);
+    json.forEach(displayObject);
   });
 }
 
@@ -40,11 +44,14 @@ await fetch("/csvtojson",
     jsonForm.addEventListener("submit", event => {
       // stop our form submission from refreshing the page
       event.preventDefault();
+      
+      // declare form values
       let url = jsonForm.elements['csv-url'].value;
       let fields = jsonForm.elements['fields'].value;
       console.log(url, fields);
+      
       // fetch json data
-      fetchCsv();
+      fetchCsv(url, fields);
       
       // reset form
       jsonForm.reset();
