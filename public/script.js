@@ -17,55 +17,56 @@ function displayObject(obj) {
 // fetch the initial list of dreams
 const fetchCsv = async (url, fields) => {
   let body;
-        if (fields) {
-          body = JSON.stringify({
-                csv: {
-                  url, 
-                  'select_fields': fields 
-                }
-              });
-        } else {
-          body = JSON.stringify({
-                csv: {
-                  url
-                }
-              });
-        }
+  if (fields) {
+    body = JSON.stringify({
+      csv: {
+        url,
+        select_fields: fields
+      }
+    });
+  } else {
+    body = JSON.stringify({
+      csv: {
+        url
+      }
+    });
+  }
   console.log(body, fields);
-await fetch("/csvtojson", 
-            { method: 'POST', 
-              body,
-             headers: {
-               'Content-Type': 'application/json'
-             }
-            })
-  .then(response => response.json()) // parse the JSON from the server
-  .then(json => {
-  // let sampleJson = [{'url' : 'json'}, {'url': 'json'}];
-  // parse json object and add it to our page
-    console.log(json);
-    displayObject(json);
-  });
-}
+  await fetch("/csvtojson", {
+    method: "POST",
+    body,
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+    .then(response => response.json()) // parse the JSON from the server
+    .then(json => {
+      // let sampleJson = [{'url' : 'json'}, {'url': 'json'}];
+      // parse json object and add it to our page
+      console.log(json);
+      displayObject(json);
+    });
+};
 
 // listen for the form to be submitted and add a new object when it is
-    jsonForm.addEventListener("submit", event => {
-      // stop our form submission from refreshing the page
-      event.preventDefault();
-      
-      // remove old values from DOM
-      if(jsonList.childNode()) {
-      jsonList.removeChild();
-      }      
-      // declare form values
-      let url = jsonForm.elements['csv-url'].value;
-      let fieldsValues = jsonForm.elements['fields'].value;
-      let fields = fieldsValues ? fieldsValues.split(',') : null;
-      console.log(url, fieldsValues ? 'd' : 's', fields);
-      
-      // fetch json data
-      fetchCsv(url, fields);
-      
-      // reset form
-      jsonForm.reset();
-    });
+jsonForm.addEventListener("submit", event => {
+  // stop our form submission from refreshing the page
+  event.preventDefault();
+
+  // remove old values from DOM
+  if (jsonList.firstChild) {
+    console.log(jsonList);
+    // jsonList.removeChild();
+  }
+  // declare form values
+  let url = jsonForm.elements["csv-url"].value;
+  let fieldsValues = jsonForm.elements["fields"].value;
+  let fields = fieldsValues ? fieldsValues.split(",") : null;
+  console.log(url, fieldsValues ? "d" : "s", fields);
+
+  // fetch json data
+  fetchCsv(url, fields);
+
+  // reset form
+  jsonForm.reset();
+});

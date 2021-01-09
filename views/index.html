@@ -3,16 +3,21 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="A cool thing made with Glitch">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="A cool thing made with Glitch" />
 
     <title>CSV Converter!</title>
 
-    <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
+    <link
+      id="favicon"
+      rel="icon"
+      href="https://glitch.com/edit/favicon-app.ico"
+      type="image/x-icon"
+    />
     <!-- import the webpage's stylesheet -->
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/style.css" />
 
     <!-- import the webpage's client-side javascript file -->
     <script src="/script.js" defer></script>
@@ -23,26 +28,29 @@
     </header>
 
     <main>
-
-<!--       <p>Tell me your hopes and dreams:</p> -->
-
       <form>
         <label>
           Paste in CSV url link
-          <input name="csv-url" type="text" maxlength="100" placeholder="Paste in URL link!">
+          <input
+            name="csv-url"
+            type="text"
+            maxlength="100"
+            placeholder="Paste in URL link!"
+          />
         </label>
         <label>
           Enter select fields (optional)
-          <input name="fields" type="text" maxlength="100" placeholder="Enter select fields seperated by commas!">
-        </label>    
+          <input
+            name="fields"
+            type="text"
+            maxlength="100"
+            placeholder="Enter select fields seperated by commas!"
+          />
+        </label>
         <button type="submit" id="submitForm">Convert</button>
       </form>
 
-<!--       <section class="dreams"> -->
-        <ul id="payload">
-<!--           <em>loading dreams&hellip;</em> -->
-        </ul>
-<!--       </section> -->
+      <ul id="payload"></ul>
     </main>
 
     <footer>Made with <a href="https://glitch.com">Glitch</a>!</footer>
