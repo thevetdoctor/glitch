@@ -11,7 +11,7 @@ const fs = require('fs');
 const csvToJson = require('csvtojson');
 const UUID = require('uuid').v4;
 
-// our default array of dreams
+// varaiables delaration
 let fileExt = '';
 let sampleCsvUrl = 'http://winterolympicsmedals.com/medalscsv';
 let driveCSV = 'https://drive.google.com/file/d/1eOfx3Qtihslx7TwJstS962OoK9vsf72F/view?usp=sharing';
@@ -39,60 +39,67 @@ app.post("/csvtojson", async (request, response) => {
           if (body) {
             if (Object.keys(body).indexOf('csv') >= 0) {
                 if (Object.keys(body['csv']).indexOf('url') >= 0) {
-// fileExt = path.extname(body['csv']['url']);
+                  // fileExt = path.extname(body['csv']['url']);
                       const selectFields = body['csv']['select_fields'];
                       // const fieldlength = selectFields.length;
-                      fileExt = path.extname(sampleCsvUrl);
+                      fileExt = path.extname(body['csv']['url']);
                           let parsedData;
                       if (fileExt !== '.csv') {
-                            try {
-                              const fetchStream = fs.createWriteStream(path.join(__dirname, './'));
-                              const fetched = await fetch(driveCSV, (res) => {
-                                res.pipe(fetchStream);
-                                fetchStream.on('finish', (data) => {
-                                  parsedData = data;
-                                });
-                              });
-                              // fetched.body.pipe(fetchStream);
-                              // fetchStream('finish', (data) => {
-                                // parsedData = data;
-                              // });
-                              // const data = fs.readFileSync(driveCSV, 'utf8')
-                              // console.log(data);
-                              // parsedData = data;
-                            } catch (err) {
-                              console.error(err)
+                                     try {
+                                      // const fetchStream = fs.createWriteStream();
+                                      const fetchStream = fs.createWriteStream(path.join(__dirname, '/public/csvFile.html'));
+                                      const fetched = await fetch(driveCSV);
+                                      console.log(fetched);
+                                      await new Promise((resolve, reject) => {
+                                        fetched.body.pipe(fetchStream);
+                                        fetched.body.on('error', reject);
+                                        fetchStream.on('finish', resolve);
+                                      });
+                                    } catch (err) {
+                                      console.error(err);
+                                    }
+                                    const publicCSV = path.join(__dirname, '/public/csvFile.csv');
+                                    const csvData = await csvToJson().fromFile(publicCSV);
+                                return response.json({message: 'URL is invalid (.csv extension not found)', fetched: csvData ? csvData : 'File not available'});
+                            }
+                            // const publicCSV = path.join(__dirname, '/public/csvFile.csv');
+                            // const csvData = await csvToJson().fromFile(publicCSV);
+
+                            // fs.createReadStream(publicCSV)
+                            //   .pipe(csv())
+                            //   .on('data', (row) => {
+                            //     console.log(row);
+                            //   })
+                            //   .on('end', () => {
+                            //     console.log('CSV file successfully processed');
+                            //   });
+
+                            const csvData = await csvToJson()
+                                                  // .fromStream(fetch(driveCSV, {method: 'GET', mode: 'no-cors'}))
+                                                  .fromStream(request.get(driveCSV))
+                                                  .subscribe(data => {
+                                                    console.log(data);
+                                                    return data;
+                                                  });
+                            const conversionKey = UUID();
+                            let finalJson;
+                             if (Object.keys(body['csv']).indexOf('select_fields') >= 0) {
+                                finalJson = csvData.map(obj => {
+                                                                  let newObj= {};
+                                                                  for(let i = 0; i < selectFields.length; i++) {
+                                                                  // Object.keys(obj) === Object.values(selectFields)
+                                                                    newObj[selectFields[i]] = obj[selectFields[i]];
+                                                                   }
+                                                                  return newObj;
+                                                              });
+                            // return response.json({message: 'select_fields parameter not passed'});
+                            } else {
+                              finalJson = csvData;
                             }
 
-                        return response.json({message: 'URL is invalid (.csv extension not found)', fetched: parsedData ? 'File retrieved' : 'File not available'});
-                    }
-                    const publicCSV = path.join(__dirname, '/public/myCSV.csv');
-                    const csvData = await csvToJson().fromFile(publicCSV);
-                    // const csvData = await csvToJson()
-                    //                       .fromStream(fetch(driveCSV, {method: 'GET', mode: 'no-cors'}))
-                    //                       .subscribe(data => {
-                    //                         console.log(data);
-                    //                         return data;
-                    //                       });
-                    const conversionKey = UUID();
-                    let finalJson;
-                     if (Object.keys(body['csv']).indexOf('select_fields') >= 0) {
-                        finalJson = csvData.map(obj => {
-                                                          let newObj= {};
-                                                          for(let i = 0; i < selectFields.length; i++) {
-                                                          // Object.keys(obj) === Object.values(selectFields)
-                                                            newObj[selectFields[i]] = obj[selectFields[i]];
-                                                           }
-                                                          return newObj;
-                                                      });
-                    // return response.json({message: 'select_fields parameter not passed'});
-                    } else {
-                      finalJson = csvData;
-                    }
-                                                           
-                    // return response.json({message: { url: sampleCsvUrl, select_fields: body['csv']['select_fields'], fileExt, data: conversionKey, publicCSV, csvData}});
-                    return response.json({ conversion_key: conversionKey, json: finalJson });                  
-                 
+                            // return response.json({message: { url: sampleCsvUrl, select_fields: body['csv']['select_fields'], fileExt, data: conversionKey, publicCSV, csvData}});
+                            return response.json({ conversion_key: conversionKey, json: finalJson });                   
+
                 } else {
                     return response.json({message: 'url is not supplied'});
                 }
