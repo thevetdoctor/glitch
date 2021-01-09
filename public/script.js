@@ -50,7 +50,7 @@ await fetch("/csvtojson",
       console.log(url, fields.split(','));
       
       // fetch json data
-      fetchCsv(url, fields);
+      fetchCsv(url, fields.split(','));
       
       // reset form
       jsonForm.reset();

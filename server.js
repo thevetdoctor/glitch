@@ -76,7 +76,6 @@ app.post("/csvtojson", async (request, response) => {
                                 finalJson = csvData.map(obj => {
                                                                   let newObj= {};
                                                                   for(let i = 0; i < selectFields.length; i++) {
-                                                                  // Object.keys(obj) === Object.values(selectFields)
                                                                     newObj[selectFields[i]] = obj[selectFields[i]];
                                                                    }
                                                                   return newObj;
