@@ -33,13 +33,9 @@ await fetch("/csvtojson",
   .then(response => response.json()) // parse the JSON from the server
   .then(json => {
   // let sampleJson = [{'url' : 'json'}, {'url': 'json'}];
-  // iterate through every object and add it to our page
-    // json.forEach(displayObject);
-  console.log(json);
-    // json.forEach(displayObject);
-  for(const {key, value} in json) {
-    displayObject({key: value});
-  }
+  // parse json object and add it to our page
+    console.log(json);
+    displayObject(json);
   });
 }
 
@@ -51,7 +47,7 @@ await fetch("/csvtojson",
       // declare form values
       let url = jsonForm.elements['csv-url'].value;
       let fields = jsonForm.elements['fields'].value;
-      console.log(url, fields);
+      console.log(url, fields.split(','));
       
       // fetch json data
       fetchCsv(url, fields);
