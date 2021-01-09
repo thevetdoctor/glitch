@@ -36,7 +36,10 @@ await fetch("/csvtojson",
   // iterate through every object and add it to our page
     // json.forEach(displayObject);
   console.log(json);
-    json.forEach(displayObject);
+    // json.forEach(displayObject);
+  for(const {key, value} in json) {
+    displayObject({key: value});
+  }
   });
 }
 
