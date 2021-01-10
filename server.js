@@ -10,12 +10,15 @@ const path = require("path");
 const fs = require("fs");
 const csvToJson = require("csvtojson");
 const UUID = require("uuid").v4;
+const Dropbox = require('dropbox');
 
 // varaiables delaration
 let fileExt = "";
 let sampleCsvUrl = "http://winterolympicsmedals.com/medalscsv";
 let driveCSV =
   "https://drive.google.com/file/d/1eOfx3Qtihslx7TwJstS962OoK9vsf72F/view?usp=sharing";
+const 
+const dbx = new Dropbox({ accessToken: ACCESS_TOKEN });
 
 app.use(parser.json());
 // make all the files in 'public' available
@@ -94,6 +97,16 @@ app.post("/csvtojson", async (request, response) => {
         } else {
           finalJson = csvData;
         }
+        
+             dbx
+             .usersGetCurrentAccount()
+              .then(function(response) {
+              console.log(response);
+            })
+            .catch(function(error) {
+              console.error(error);
+            });
+        
         return response.json({
           conversion_key: conversionKey,
           json: finalJson
