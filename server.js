@@ -99,15 +99,15 @@ app.post("/csvtojson", async (request, response) => {
           finalJson = csvData;
         }
         
-            await dbx
-             .usersGetCurrentAccount()
-              .then(function(response) {
-              dropValue = response;
-              console.log(response);
-            })
-            .catch(function(error) {
-              console.error(error);
-            });
+            // await dbx
+            //  .usersGetCurrentAccount()
+            //   .then(function(response) {
+            //   dropValue = response;
+            //   console.log(response);
+            // })
+            // .catch(function(error) {
+            //   console.error(error);
+            // });
         
         return response.json({
           conversion_key: conversionKey,
