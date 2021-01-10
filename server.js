@@ -10,14 +10,14 @@ const path = require("path");
 const fs = require("fs");
 const csvToJson = require("csvtojson");
 const UUID = require("uuid").v4;
-const Dropbox = require('dropbox');
+const Dropbox = require('dropbox').Dropbox;
 
 // varaiables delaration
 let fileExt = "";
 let sampleCsvUrl = "http://winterolympicsmedals.com/medalscsv";
 let driveCSV =
   "https://drive.google.com/file/d/1eOfx3Qtihslx7TwJstS962OoK9vsf72F/view?usp=sharing";
-const 
+const ACCESS_TOKEN = 'sl.ApBDcdDYX_Cy-KAkIKs_qDClDu-d2t7P3gMlA7nnnJNH8GSSza0qXa6GfuNjpdv-gFq6wcsZ87JWRfzh85AtB-bAci3XG6PgsNGxizOCcc-u779UVEOETs35dJltumkR_QmbmEU';
 const dbx = new Dropbox({ accessToken: ACCESS_TOKEN });
 
 app.use(parser.json());
@@ -80,6 +80,7 @@ app.post("/csvtojson", async (request, response) => {
         const csvData = await csvToJson().fromFile(publicCSV);
         const conversionKey = UUID();
         let finalJson;
+        let dropValue;
         if ((Object.keys(body["csv"]).indexOf("select_fields") >= 0) && (body['csv']['select_fields'] !== null)) {
           const selectFields = body["csv"]["select_fields"];
           const filterFields = selectFields.filter(x => Object.keys(csvData).indexOf(x) >= 0);
@@ -98,9 +99,10 @@ app.post("/csvtojson", async (request, response) => {
           finalJson = csvData;
         }
         
-             dbx
+            await dbx
              .usersGetCurrentAccount()
               .then(function(response) {
+              dropValue = response;
               console.log(response);
             })
             .catch(function(error) {
@@ -109,7 +111,8 @@ app.post("/csvtojson", async (request, response) => {
         
         return response.json({
           conversion_key: conversionKey,
-          json: finalJson
+          json: finalJson,
+          dropValue
         });
       } else {
         return response.json({ message: "url is not supplied" });
