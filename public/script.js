@@ -54,10 +54,11 @@ jsonForm.addEventListener("submit", event => {
   event.preventDefault();
 
   // remove old values from DOM
-  if (jsonList.firstChild) {
+  // if (jsonList.firstChild) {
+  jsonList.innerHTML = '';
     console.log(jsonList);
     // jsonList.removeChild();
-  }
+  // }
   // declare form values
   let url = jsonForm.elements["csv-url"].value;
   let fieldsValues = jsonForm.elements["fields"].value;
