@@ -77,9 +77,9 @@ app.post("/csvtojson", async (request, response) => {
         const csvData = await csvToJson().fromFile(publicCSV);
         const conversionKey = UUID();
         let finalJson;
-        if (Object.keys(body["csv"]).indexOf("select_fields") >= 0) && body['csv']['select_fields']  {
+        if ((Object.keys(body["csv"]).indexOf("select_fields") >= 0) && (body['csv']['select_fields'] !== null)) {
           const selectFields = body["csv"]["select_fields"];
-          const filterFields = selectFields && selectFields.filter(x => Object.keys(csvData).indexOf(x) >= 0);
+          const filterFields = selectFields.filter(x => Object.keys(csvData).indexOf(x) >= 0);
           if (!filterFields.length) {
             finalJson = [{message: 'Field not found'}];
           } else {
