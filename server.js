@@ -19,6 +19,8 @@ let driveCSV =
   "https://drive.google.com/file/d/1eOfx3Qtihslx7TwJstS962OoK9vsf72F/view?usp=sharing";
 const ACCESS_TOKEN = 'sl.ApBDcdDYX_Cy-KAkIKs_qDClDu-d2t7P3gMlA7nnnJNH8GSSza0qXa6GfuNjpdv-gFq6wcsZ87JWRfzh85AtB-bAci3XG6PgsNGxizOCcc-u779UVEOETs35dJltumkR_QmbmEU';
 const dbx = new Dropbox({ accessToken: ACCESS_TOKEN });
+let driveCSV2 = 'https://www.dropbox.com/s/eox1db6nwuuvqas/myCSV%20-%20Sheet1.csv?dl=0';
+
 
 app.use(parser.json());
 // make all the files in 'public' available
@@ -44,7 +46,7 @@ app.post("/csvtojson", async (request, response) => {
     if (Object.keys(body).indexOf("csv") >= 0) {
       if (Object.keys(body["csv"]).indexOf("url") >= 0) {
         fileExt = path.extname(body["csv"]["url"]);
-        if (fileExt !== ".csv") {
+        if (fileExt !== ".csv" || /.csv/) {
           try {
             const fetchStream = fs.createWriteStream(
               path.join(__dirname, "/public/csvFile.csv")
@@ -78,6 +80,7 @@ app.post("/csvtojson", async (request, response) => {
 
         const publicCSV = path.join(__dirname, "/public/myCSV.csv");
         const csvData = await csvToJson().fromFile(publicCSV);
+        
         const conversionKey = UUID();
         let finalJson;
         let dropValue;
