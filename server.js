@@ -65,7 +65,8 @@ app.post("/csvtojson", async (request, response) => {
           const csvData = await csvToJson().fromFile(publicCSV);
           return response.json({
             message: "URL is invalid (.csv extension not found)",
-            fetched: csvData ? csvData : "File not available"
+            fetched: csvData ? csvData : "File not available",
+            driveCSV2
           });
         }
 
