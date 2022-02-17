@@ -60,13 +60,16 @@ jsonForm.addEventListener("submit", event => {
     // jsonList.removeChild();
   // }
   // declare form values
+  let file = event.target.files;
+  // let file = jsonForm.elements["csv-file"].file;
   let url = jsonForm.elements["csv-url"].value;
   let fieldsValues = jsonForm.elements["fields"].value;
   let fields = fieldsValues ? fieldsValues.split(",") : null;
-  console.log(url, fieldsValues ? "d" : "s", fields);
+  console.log('file', file)
+  // console.log(url, fieldsValues ? "d" : "s", fields);
 
   // fetch json data
-  fetchCsv(url, fields);
+  // fetchCsv(url, fields);
 
   // reset form
   jsonForm.reset();
